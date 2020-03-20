@@ -1,4 +1,4 @@
-FROM hub.c.163.com/library/java:8-alpine
+FROM java:8
 MAINTAINER liuzhi
 VOLUME /tmp
 ADD mavenV-1.0-SNAPSHOT.jar app.jar
