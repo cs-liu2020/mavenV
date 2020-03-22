@@ -16,4 +16,14 @@ public class Controller {
     public String checkMessage(){
         return "check wechat is ok..";
     }
+
+    @RequestMapping(value = "/view")
+    public String viewMessage(){
+        return "viewMessage  is ok..";
+    }
+
+    @RequestMapping(value = "/wechat")
+    public String wechatMessage(){
+        return "wechatMessage wechat is ok..";
+    }
 }
