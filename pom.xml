@@ -92,6 +92,9 @@
               <include>${project.build.finalName}.jar</include>
             </resource>
           </resources>
+          <buildArgs>
+            <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+          </buildArgs>
         </configuration>
       </plugin>
     </plugins>
