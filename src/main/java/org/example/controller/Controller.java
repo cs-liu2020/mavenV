@@ -11,4 +11,9 @@ public class Controller {
 
         return "hello world, opay............test";
     }
+
+    @RequestMapping(value = "/check")
+    public String checkMessage(){
+        return "check wechat is ok..";
+    }
 }
