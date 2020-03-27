@@ -12,7 +12,8 @@
 
 		<Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level - traceId:[%X{traceId}] %c{36} -- %m%n</Property>
         <Property name="APP_LOG_ROOT">/data/logs</Property>
-        <Property name="APP_LOG_NAME">${sys:log4.fileName}</Property>
+<!--        <Property name="APP_LOG_NAME">${sys:log4.fileName}</Property>-->
+        <Property name="APP_LOG_NAME">mavenV</Property>
     </Properties>
     <!--先定义所有的appender-->
     <Appenders>
