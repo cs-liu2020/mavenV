@@ -26,4 +26,7 @@ public class Controller {
     public String wechatMessage(){
         return "wechatMessage wechat is ok..";
     }
+
+
+
 }
