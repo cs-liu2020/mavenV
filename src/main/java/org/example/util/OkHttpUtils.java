@@ -1,5 +1,6 @@
 package org.example.util;
 
+import lombok.extern.log4j.Log4j2;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
@@ -10,9 +11,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-
+@Log4j2
 public class OkHttpUtils {
-
 
     private static final String MDC_REQUEST_ID = "traceId";
 
@@ -73,7 +73,7 @@ public class OkHttpUtils {
                 }
             }
         }
-        Request request = requestBuilder.addHeader(MDC_REQUEST_ID,MDC.get(MDC_REQUEST_ID) ==null? UUID.randomUUID().toString().replace("-", ""):MDC.get(MDC_REQUEST_ID)).build();
+        Request request = requestBuilder.addHeader(MDC_REQUEST_ID, MDC.get(MDC_REQUEST_ID) ==null? UUID.randomUUID().toString().replace("-", ""):MDC.get(MDC_REQUEST_ID)).build();
         return  getResponseMessage(request);
     }
 
@@ -84,7 +84,7 @@ public class OkHttpUtils {
             response=client.newCall(request).execute();
             body = response.body().string();
         } catch (IOException e) {
-          // log.error(e);
+            log.error("aaa");
         }
         return body;
     }

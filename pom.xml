@@ -14,6 +14,12 @@
     <version>2.1.6.RELEASE</version>
   </parent>
 
+<!--  &lt;!&ndash; log4j日志文件管理包版本 &ndash;&gt;-->
+<!--  <properties>-->
+<!--    <slf4j.version>1.7.7</slf4j.version>-->
+<!--&lt;!&ndash;    <log4j.version>1.2.17</log4j.version>&ndash;&gt;-->
+<!--  </properties>-->
+
   <name>mavenV</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
@@ -28,6 +34,12 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-log4j2</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.8</version>
+      <scope>provided</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -39,6 +51,23 @@
         </exclusion>
       </exclusions>
     </dependency>
+
+<!--    &lt;!&ndash; 日志文件管理包 &ndash;&gt;-->
+<!--    <dependency>-->
+<!--      <groupId>log4j</groupId>-->
+<!--      <artifactId>log4j</artifactId>-->
+<!--      <version>${log4j.version}</version>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>org.slf4j</groupId>-->
+<!--      <artifactId>slf4j-api</artifactId>-->
+<!--      <version>${slf4j.version}</version>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>org.slf4j</groupId>-->
+<!--      <artifactId>slf4j-log4j12</artifactId>-->
+<!--      <version>${slf4j.version}</version>-->
+<!--    </dependency>-->
 
     <!--okhttp-->
     <dependency>
