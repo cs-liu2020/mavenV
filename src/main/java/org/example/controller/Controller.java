@@ -34,5 +34,12 @@ public class Controller {
     }
 
 
+    @RequestMapping(value = "/localTest")
+    public String localTest(){
+        log.info("aaaaaaaaaaaaaaaaaaaa,方法:{}");
+        return "hello world, opay............test";
+
+    }
+
 
 }
