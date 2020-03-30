@@ -48,4 +48,41 @@ public class InMsgEntity {
     // 图片消息媒体id，可以调用多媒体文件下载接口拉取数据
     @XmlElement(name="MediaId")
     private String mediaId;
+
+    //视频
+    @XmlElement(name="thumbMediaId")
+    private String ThumbMediaId;
+
+    //语音
+    @XmlElement(name="Format")
+    private String format;
+
+    @XmlElement(name="Recognition")
+    private String recognition;
+
+
+    //地理位置
+    @XmlElement(name="Location_X")
+    private String x;
+
+    @XmlElement(name="Location_Y")
+    private String y;
+
+    //缩放大小
+    @XmlElement(name="Scale")
+    private String scale;
+
+    //地理位置
+    @XmlElement(name="Label")
+    private String label;
+
+
+    //连接
+    @XmlElement(name="Title")
+    private String title;
+    @XmlElement(name="Description")
+    private String description;
+    @XmlElement(name="Url")
+    private String url;
+
 }

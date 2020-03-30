@@ -5,6 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.extern.log4j.Log4j2;
 import org.example.message.InMsgEntity;
 import org.example.message.OutMsgEntity;
+import org.example.message.response.NewsMesEntity;
+import org.example.message.response.TextMsgEntity;
+import org.example.message.response.VodioMsgEntity;
+import org.example.message.response.VoiceMsgEntity;
 import org.example.util.MessageUtil;
 import org.example.util.WeChatUtils;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @Log4j2
@@ -47,33 +53,70 @@ public class WechatSecurity {
     public String doSendMessage(@RequestBody InMsgEntity msg) {
         try {
             log.info("消息接收的参数为:{}", JSONObject.toJSONString(msg));
-            //创建消息响应对象
-            OutMsgEntity out = new OutMsgEntity();
-
-            //把原来的发送方设置为接收方
-            out.setToUserName(msg.getFromUserName());
-            //把原来的接收方设置为发送方
-            out.setFromUserName(msg.getToUserName());
+            OutMsgEntity out=null;
             //获取接收的消息类型
             String msgType = msg.getMsgType();
-            //设置消息的响应类型
-            out.setMsgType(msgType);
-            //设置消息创建时间
-            out.setCreateTime(new Date().getTime());
-            //根据类型设置不同的消息数据
-            if ("text".equals(msgType)) {
-                out.setContent(msg.getContent());
-            } else if ("image".equals(msgType)) {
-                out.setMediaId(new String[]{msg.getMediaId()});
+            if("text".equalsIgnoreCase(msgType)){
+                TextMsgEntity entity=new TextMsgEntity();
+                converMessage(entity,msg);
+                entity.setContent(msg.getContent());
+                String message = MessageUtil.getInstance().messageToXml(entity);
+                log.info("消息响应用户的text信息为:{}",message);
+                return message;
+            }else if("Image".equalsIgnoreCase(msgType)){
+                NewsMesEntity picMsgEntity=new NewsMesEntity();
+                converMessage(picMsgEntity,msg);
+                NewsMesEntity.Article article=new NewsMesEntity.Article();
+                article.setDescription("这个是图文消息1");
+                article.setPicUrl("https://i.loli.net/2019/05/26/5cea3d137aa1469348.jpg");
+                article.setTitle("图文消息1");
+                //图文连接
+                article.setUrl("https://www.cnblogs.com/gede");
+                List<NewsMesEntity.Article> list=new ArrayList();
+                list.add(article);
+                picMsgEntity.setArticleCount(list.size());
+                picMsgEntity.setArticles(list);
+                String message = MessageUtil.getInstance().messageToXml(picMsgEntity);
+                log.info("消息响应用户的image信息为:{}",message);
+                return message;
+            }else if("voice".equalsIgnoreCase(msgType)){
+                VoiceMsgEntity voiceMsgEntity=new VoiceMsgEntity();
+                converMessage(voiceMsgEntity,msg);
+                VoiceMsgEntity.Voice voice=new VoiceMsgEntity.Voice();
+                voice.setMediaId(msg.getMediaId());
+                voiceMsgEntity.setVoice(voice);
+                String message = MessageUtil.getInstance().messageToXml(voiceMsgEntity);
+                log.info("消息响应用户的voice信息为:{}",message);
+                return message;
+            }else if("video".equalsIgnoreCase(msgType)){
+                VodioMsgEntity v=new VodioMsgEntity();
+                converMessage(v,msg);
+                VodioMsgEntity.Video video=new VodioMsgEntity.Video();
+                video.setTitle(msg.getTitle());
+                video.setDescription(msg.getDescription());
+                video.setMediaId(msg.getMediaId());
+                v.setVideo(video);
+                String message = MessageUtil.getInstance().messageToXml(v);
+                log.info("消息响应用户的video信息为:{}",message);
+                return message;
             }
-            String message = MessageUtil.getInstance().textMessageToXml(out);
-            log.info("消息响应用户的信息为:{}",message);
-            return message;
-
         } catch (Exception e) {
             log.error("验证异常: e:{}", e);
         }
         return null;
     }
+
+
+
+    private <E extends OutMsgEntity> E converMessage(E e, InMsgEntity msg){
+        e.setToUserName(msg.getFromUserName());
+        //把原来的接收方设置为发送方
+        e.setFromUserName(msg.getToUserName());
+        e.setMsgType(msg.getMsgType());
+        //设置消息创建时间
+        e.setCreateTime(new Date().getTime());
+        return e;
+    }
+
 
 }

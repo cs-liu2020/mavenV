@@ -3,6 +3,7 @@ package org.example.util;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.naming.NoNameCoder;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import org.dom4j.Document;
@@ -91,8 +92,9 @@ public class MessageUtil {
      * @return xml
      */
 
-    public String textMessageToXml(OutMsgEntity textMessage) {
+    public String messageToXml(OutMsgEntity textMessage) {
         xstream.alias("xml", textMessage.getClass());
+        xstream.autodetectAnnotations(true);
         return xstream.toXML(textMessage);
     }
 
@@ -101,21 +103,34 @@ public class MessageUtil {
      * 扩展xstream，使其支持CDATA块
      */
 
-    private XStream xstream = new XStream(new XppDriver() {
+   private  XStream xstream = new XStream(new XppDriver(new NoNameCoder()) {
 
+        @Override
         public HierarchicalStreamWriter createWriter(Writer out) {
-
             return new PrettyPrintWriter(out) {
-                // 对全部xml节点的转换都添加CDATA标记
                 boolean cdata = true;
 
+                @Override
+                @SuppressWarnings("rawtypes")
                 public void startNode(String name, Class clazz) {
                     super.startNode(name, clazz);
                     if (name.equals("CreateTime")) {
                         cdata = false;
+                    }else{
+                        //false=>true
+                        if(!cdata){
+                            cdata=true;
+                        }
                     }
                 }
 
+                @Override
+                public String encodeNode(String name) {
+                    return name;
+                }
+
+
+                @Override
                 protected void writeText(QuickWriter writer, String text) {
                     if (cdata) {
                         writer.write("<![CDATA[");
@@ -125,9 +140,8 @@ public class MessageUtil {
                         writer.write(text);
                     }
                 }
-
             };
         }
-
     });
+
 }

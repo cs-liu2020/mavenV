@@ -2,12 +2,8 @@ package org.example.message;
 
 import lombok.Data;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import java.io.Serializable;
 
-@XmlAccessorType(XmlAccessType.FIELD)
 @Data
 public class OutMsgEntity implements Serializable {
 
@@ -27,10 +23,5 @@ public class OutMsgEntity implements Serializable {
      * news 图文消息
      */
     protected String MsgType;
-    // 图片消息媒体id，可以调用多媒体文件下载接口拉取数据
-    //xmlElementWrapper在原来基础上再封装一层xml
-    @XmlElementWrapper(name="Image")
-    private String[] MediaId ;
-    // 文本内容
-    private String Content;
+
 }
