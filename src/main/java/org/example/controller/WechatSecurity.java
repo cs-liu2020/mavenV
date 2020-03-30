@@ -1,16 +1,17 @@
 package org.example.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.log4j.Log4j2;
+import org.example.message.InMsgEntity;
+import org.example.message.OutMsgEntity;
 import org.example.util.WeChatUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.util.Date;
 
 @RestController
 @Log4j2
@@ -38,6 +39,39 @@ public class WechatSecurity {
         } catch (Exception e) {
             log.error("验证异常: e:{}",e);
         }
+    }
+
+
+    @PostMapping("/security")
+    public Object doSendMessage(@RequestBody InMsgEntity msg) {
+        try {
+            log.info("消息接收的参数为:{}", JSONObject.toJSONString(msg));
+            //创建消息响应对象
+            OutMsgEntity out = new OutMsgEntity();
+
+            //把原来的发送方设置为接收方
+            out.setToUserName(msg.getFromUserName());
+            //把原来的接收方设置为发送方
+            out.setFromUserName(msg.getToUserName());
+            //获取接收的消息类型
+            String msgType = msg.getMsgType();
+            //设置消息的响应类型
+            out.setMsgType(msgType);
+            //设置消息创建时间
+            out.setCreateTime(new Date().getTime());
+            //根据类型设置不同的消息数据
+            if ("text".equals(msgType)) {
+                out.setContent(msg.getContent());
+            } else if ("image".equals(msgType)) {
+                out.setMediaId(new String[]{msg.getMediaId()});
+            }
+            log.info("消息响应用户的信息为:{}",JSONObject.toJSONString((out)));
+            return out;
+
+        } catch (Exception e) {
+            log.error("验证异常: e:{}", e);
+        }
+        return null;
     }
 
 }

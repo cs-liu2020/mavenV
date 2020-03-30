@@ -19,7 +19,7 @@ public class MenuController {
     @RequestMapping("/create")
     public String createMenu(@RequestBody String menuList){
         log.info("创建菜单的入参为{}",menuList);
-        String url= WechatUrlConstant.CREATE_MENU+"?access_token="+ AccessTokenUtil.getAccessToken();
+        String url= WechatUrlConstant.CREATE_MENU+"?access_token="+ AccessTokenUtil.getAccessToken().getToken();
         String httpsRequest = OkHttpUtils.doPostHttpsRequest(url, menuList, getHeaderMessage());
         log.info("创建菜单出参为:{}",httpsRequest);
         return httpsRequest;
@@ -27,7 +27,7 @@ public class MenuController {
 
     @RequestMapping("/searchMenu")
     public String searchMenu(){
-        String url= WechatUrlConstant.SEARCH_MENU+"?access_token="+ AccessTokenUtil.getAccessToken();
+        String url= WechatUrlConstant.SEARCH_MENU+"?access_token="+ AccessTokenUtil.getAccessToken().getToken();
         String httpsRequest = OkHttpUtils.doGetHttpsRequest(url, getHeaderMessage());
         log.info("查询菜单出参为:{}",httpsRequest);
         return httpsRequest;

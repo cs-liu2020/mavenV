@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.example.constant.WechatUrlConstant;
 import org.example.listener.WebApplicationContextLocator;
 import org.example.message.AccessToken;
+import org.example.message.JsApiTicket;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
@@ -43,16 +44,17 @@ public class AccessTokenUtil {
                 ServletContext sc = WebApplicationContextLocator.get();
                 sc.removeAttribute("access_token");
                 log.info("查询获取的access_token为:{}",accessToken.getToken());
-                sc.setAttribute("access_token", accessToken.getToken());
+                sc.setAttribute("access_token", accessToken);
 
-//                /**
-//                 * cache jsapi_ticket
-//                 */
-//                JsApiTicket jsApiTicket = getJsApiTicket(accessToken.getToken());
-//                if(null != jsApiTicket) {
-//                    sc.removeAttribute(Contants.JSAPI_TICKET);
-//                    sc.setAttribute(Contants.JSAPI_TICKET, jsApiTicket);
-//                }
+                /**
+                 * cache jsapi_ticket
+                 */
+                JsApiTicket jsApiTicket = getJsApiTicket(accessToken.getToken());
+                if(null != jsApiTicket) {
+                    sc.removeAttribute("ticket");
+                    log.info("查询获取的access_token为:{}",accessToken.getToken());
+                    sc.setAttribute("ticket", jsApiTicket);
+                }
                 //这里可以向数据库中写access_token
             }
         } else {
@@ -95,31 +97,35 @@ public class AccessTokenUtil {
     }
 
 
+    public static JsApiTicket getJsApiTicket() {
+        return (JsApiTicket) WebApplicationContextLocator.get().getAttribute("ticket");
+    }
+
+
     public static Map<String,String> getHeaderMessage(){
         Map<String,String> headerMap=new HashMap<>();
         headerMap.put("content-type","application/json");
         return headerMap;
     }
 
-//    public static JsApiTicket getJsApiTicket(String accessToken) {
-//        JsApiTicket jsApiTicket = null;
-//
-//        String requestUrl = JSAPI_TICKET.replace("ACCESS_TOKEN", accessToken);
-//        JSONObject jsonObject = httpRequest(requestUrl, "GET", null);
-//        // 如果请求成功
-//        if (null != jsonObject) {
-//            try {
-//                jsApiTicket = new JsApiTicket();
-//                jsApiTicket.setTicket(jsonObject.getString("ticket"));
-//                jsApiTicket.setExpiresIn(jsonObject.getInt("expires_in"));
-//            } catch (JSONException e) {
-//                accessToken = null;
-//                // 获取jsApiTicket失败
-//                log.error("获取jsApiTicket失败 errcode:{} errmsg:{}", jsonObject.getInt("errcode"), jsonObject.getString("errmsg"));
-//            }
-//        }
-//        return jsApiTicket;
-//    }
+    public static JsApiTicket getJsApiTicket(String accessToken) {
+        JsApiTicket jsApiTicket = null;
+        String url = String.format(WechatUrlConstant.GET_TICKET, accessToken);
+        log.info("获取ticket的url为:{}",url);
+        String request= OkHttpUtils.doGetHttpsRequest(url, getHeaderMessage());
+        JSONObject jsonObject = JSON.parseObject(request);
+        // 如果请求成功
+        if (null != jsonObject) {
+            try {
+                jsApiTicket = JSON.parseObject(request, JsApiTicket.class);
+            } catch (JSONException e) {
+                accessToken = null;
+                // 获取jsApiTicket失败
+                log.error("获取jsApiTicket失败 errcode:{} errmsg:{}", (int)jsonObject.get("errcode"), jsonObject.getString("errmsg"));
+            }
+        }
+        return jsApiTicket;
+    }
 
 
 }
