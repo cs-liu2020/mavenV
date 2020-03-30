@@ -85,4 +85,8 @@ public class InMsgEntity {
     @XmlElement(name="Url")
     private String url;
 
+    //事件
+    @XmlElement(name="Event")
+    private String event;
+
 }

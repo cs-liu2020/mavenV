@@ -114,7 +114,7 @@ public class MessageUtil {
                 @SuppressWarnings("rawtypes")
                 public void startNode(String name, Class clazz) {
                     super.startNode(name, clazz);
-                    if (name.equals("CreateTime")) {
+                    if (name.equals("CreateTime") || name.equalsIgnoreCase("ArticleCount")) {
                         cdata = false;
                     }else{
                         //false=>true

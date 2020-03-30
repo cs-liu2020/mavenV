@@ -66,6 +66,7 @@ public class WechatSecurity {
             }else if("Image".equalsIgnoreCase(msgType)){
                 NewsMesEntity picMsgEntity=new NewsMesEntity();
                 converMessage(picMsgEntity,msg);
+                picMsgEntity.setMsgType("news");
                 NewsMesEntity.Article article=new NewsMesEntity.Article();
                 article.setDescription("这个是图文消息1");
                 article.setPicUrl("https://i.loli.net/2019/05/26/5cea3d137aa1469348.jpg");
@@ -99,6 +100,16 @@ public class WechatSecurity {
                 String message = MessageUtil.getInstance().messageToXml(v);
                 log.info("消息响应用户的video信息为:{}",message);
                 return message;
+            }else if("event".equalsIgnoreCase(msgType)){
+               if("subscribe".equalsIgnoreCase(msg.getEvent())){
+                   TextMsgEntity entity=new TextMsgEntity();
+                   converMessage(entity,msg);
+                   entity.setMsgType("text");
+                   entity.setContent("欢迎您关注本公众号， 祝您玩的开心。。。。");
+                   String message = MessageUtil.getInstance().messageToXml(entity);
+                   log.info("消息响应用户的text信息为:{}",message);
+                   return message;
+               }
             }
         } catch (Exception e) {
             log.error("验证异常: e:{}", e);
