@@ -52,7 +52,7 @@ public class AccessTokenUtil {
                 JsApiTicket jsApiTicket = getJsApiTicket(accessToken.getToken());
                 if(null != jsApiTicket) {
                     sc.removeAttribute("ticket");
-                    log.info("查询获取的access_token为:{}",accessToken.getToken());
+                    log.info("查询获取的ticket为:{}",jsApiTicket.getTicket());
                     sc.setAttribute("ticket", jsApiTicket);
                 }
                 //这里可以向数据库中写access_token
