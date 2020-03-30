@@ -58,7 +58,23 @@
       </exclusions>
     </dependency>
 
-<!--    &lt;!&ndash; 日志文件管理包 &ndash;&gt;-->
+    <!--    xml类型转化-->
+    <dependency>
+      <groupId>com.thoughtworks.xstream</groupId>
+      <artifactId>xstream</artifactId>
+      <version>1.4.9</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/dom4j/dom4j -->
+    <dependency>
+      <groupId>dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+      <version>1.6.1</version>
+    </dependency>
+
+
+
+    <!--    &lt;!&ndash; 日志文件管理包 &ndash;&gt;-->
 <!--    <dependency>-->
 <!--      <groupId>log4j</groupId>-->
 <!--      <artifactId>log4j</artifactId>-->

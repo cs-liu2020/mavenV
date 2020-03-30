@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.extern.log4j.Log4j2;
 import org.example.message.InMsgEntity;
 import org.example.message.OutMsgEntity;
+import org.example.util.MessageUtil;
 import org.example.util.WeChatUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class WechatSecurity {
 
 
     @PostMapping("/security")
-    public Object doSendMessage(@RequestBody InMsgEntity msg) {
+    public String doSendMessage(@RequestBody InMsgEntity msg) {
         try {
             log.info("消息接收的参数为:{}", JSONObject.toJSONString(msg));
             //创建消息响应对象
@@ -65,8 +66,9 @@ public class WechatSecurity {
             } else if ("image".equals(msgType)) {
                 out.setMediaId(new String[]{msg.getMediaId()});
             }
-            log.info("消息响应用户的信息为:{}",JSONObject.toJSONString((out)));
-            return out;
+            String message = MessageUtil.getInstance().textMessageToXml(out);
+            log.info("消息响应用户的信息为:{}",message);
+            return message;
 
         } catch (Exception e) {
             log.error("验证异常: e:{}", e);
